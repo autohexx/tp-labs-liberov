@@ -15,7 +15,8 @@ namespace Lab1
                 Console.WriteLine("Меню выбора:");
                 Console.WriteLine("1) Задание 1. Факториал");
                 Console.WriteLine("2) Задание 2. Фибоначчи");
-                Console.WriteLine("3) Выход");
+                Console.WriteLine("3) Задание 3. Значение функции");
+                Console.WriteLine("4) Выход");
                 Console.Write("Ваш выбор: ");
 
                 string choice = Console.ReadLine();
@@ -24,6 +25,7 @@ namespace Lab1
                 {
                     case "1": Task1_Factorial(); break;
                     case "2": Task2_Fibonacci(); break;
+                    case "3": Task3_Function(); break;
                     case "0":
                         Console.WriteLine("Выход из программы.");
                         return;
@@ -78,6 +80,29 @@ namespace Lab1
             Console.WriteLine(result);
         }
 
+
+        static void Task3_Function()
+        {
+            double x;
+            while (true)
+            {
+                Console.Write("Введите x: ");
+                string input = Console.ReadLine();
+                if (double.TryParse(input, System.Globalization.NumberStyles.Float,
+                                    System.Globalization.CultureInfo.InvariantCulture, out x))
+                    break;
+                Console.WriteLine("Ошибка! Введите число.");
+            }
+
+
+            double ln43 = Math.Log(4.0 / 3.0);
+            double sqrtPart = Math.Sqrt(ln43);
+            double A = sqrtPart + (x + 9.0 / 7.0) - Math.Exp(Math.Sin(1.3 * x - 0.7));
+
+            Console.WriteLine($"A = {A:F6}");
+        }
+
+       
     }
 }
 
