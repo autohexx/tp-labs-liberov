@@ -16,7 +16,8 @@ namespace Lab1
                 Console.WriteLine("1) Задание 1. Факториал");
                 Console.WriteLine("2) Задание 2. Фибоначчи");
                 Console.WriteLine("3) Задание 3. Значение функции");
-                Console.WriteLine("4) Выход");
+                Console.WriteLine("4) Задание 4. Сумма ряда Тейлора");
+                Console.WriteLine("5) Выход");
                 Console.Write("Ваш выбор: ");
 
                 string choice = Console.ReadLine();
@@ -26,6 +27,7 @@ namespace Lab1
                     case "1": Task1_Factorial(); break;
                     case "2": Task2_Fibonacci(); break;
                     case "3": Task3_Function(); break;
+                    case "4": Task4_TaylorSin(); break;
                     case "0":
                         Console.WriteLine("Выход из программы.");
                         return;
@@ -102,7 +104,40 @@ namespace Lab1
             Console.WriteLine($"A = {A:F6}");
         }
 
-       
+        static void Task4_TaylorSin()
+        {
+            double x;
+            while (true)
+            {
+                Console.Write("Введите x (в радианах): ");
+                string input = Console.ReadLine();
+                if (double.TryParse(input, System.Globalization.NumberStyles.Float,
+                                    System.Globalization.CultureInfo.InvariantCulture, out x))
+                    break;
+                Console.WriteLine("Ошибка! Введите число.");
+            }
+
+            const double eps = 1e-6;
+            double sum = 0.0;
+            double term = x;
+            int k = 1;
+            int count = 0;
+
+            while (Math.Abs(term) > eps)
+            {
+                sum += term;
+                count++;
+                term = -term * x * x / ((k + 1) * (k + 2));
+                k += 2;
+            }
+
+            double libValue = Math.Sin(x);
+
+            Console.WriteLine($"Сумма ряда:      {sum:F10}");
+            Console.WriteLine($"Math.Sin(x):     {libValue:F10}");
+            Console.WriteLine($"Разница:         {Math.Abs(sum - libValue):E3}");
+            Console.WriteLine($"Просуммировано членов: {count}");
+        }
     }
 }
 
