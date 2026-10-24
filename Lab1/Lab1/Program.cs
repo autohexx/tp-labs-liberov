@@ -72,7 +72,7 @@ namespace Lab1
 
             long a = 0, b = 1;
             string result = "";
-            for (int i = 0; i <= n; i++)
+            for (int i = 0; i < n; i++)
             {
                 result += a + (i < n ? ", " : "");
                 long next = a + b;
