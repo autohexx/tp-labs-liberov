@@ -2,56 +2,58 @@
 {
     public abstract class Vehicle
     {
-        private readonly string _plateNumber;
-        private readonly string _brand;
-        private readonly int _year;
-        private readonly double _fuelConsumption; // л / 100 км
-        private readonly double _fuelPrice;       // руб / л
+        private string brand;
+        private string model;
+        private string registrationNumber;
+        private decimal ratePerKm;
 
-        protected Vehicle(string plateNumber, string brand, int year,
-                          double fuelConsumption, double fuelPrice)
+        public string Brand => brand;
+        public string Model => model;
+        public string RegistrationNumber => registrationNumber;
+        public decimal RatePerKm => ratePerKm;
+
+        protected Vehicle(
+            string brand,
+            string model,
+            string registrationNumber,
+            decimal ratePerKm)
         {
-            if (string.IsNullOrWhiteSpace(plateNumber))
-                throw new ArgumentException("Госномер не может быть пустым.", nameof(plateNumber));
             if (string.IsNullOrWhiteSpace(brand))
-                throw new ArgumentException("Марка не может быть пустой.", nameof(brand));
-            if (year < 1900 || year > DateTime.Now.Year + 1)
-                throw new ArgumentOutOfRangeException(nameof(year), "Некорректный год выпуска.");
-            if (fuelConsumption <= 0)
-                throw new ArgumentOutOfRangeException(nameof(fuelConsumption), "Расход топлива должен быть > 0.");
-            if (fuelPrice <= 0)
-                throw new ArgumentOutOfRangeException(nameof(fuelPrice), "Цена топлива должна быть > 0.");
+                throw new ArgumentException("Марка не может быть пустой.");
 
-            _plateNumber = plateNumber;
-            _brand = brand;
-            _year = year;
-            _fuelConsumption = fuelConsumption;
-            _fuelPrice = fuelPrice;
+            if (string.IsNullOrWhiteSpace(model))
+                throw new ArgumentException("Модель не может быть пустой.");
+
+            if (string.IsNullOrWhiteSpace(registrationNumber))
+                throw new ArgumentException("Номер не может быть пустым.");
+
+            if (ratePerKm <= 0)
+                throw new ArgumentOutOfRangeException(
+                    nameof(ratePerKm),
+                    "Стоимость километра должна быть больше нуля.");
+
+            this.brand = brand;
+            this.model = model;
+            this.registrationNumber = registrationNumber;
+            this.ratePerKm = ratePerKm;
         }
 
-        public string PlateNumber => _plateNumber;
-        public string Brand => _brand;
-        public int Year => _year;
-        public double FuelConsumption => _fuelConsumption;
-        public double FuelPrice => _fuelPrice;
+        public abstract string CapacityDescription { get; }
 
-        public abstract int Capacity { get; }
-        public abstract string VehicleType { get; }
+        public abstract decimal CalculateTripCost(decimal distance);
 
-        public abstract double CalculateTripCost(double distanceKm);
-
-        protected double FuelCost(double distanceKm)
+        protected static void ValidateDistance(decimal distance)
         {
-            if (distanceKm <= 0)
-                throw new ArgumentOutOfRangeException(nameof(distanceKm), "Расстояние должно быть > 0.");
-            return distanceKm / 100.0 * _fuelConsumption * _fuelPrice;
+            if (distance <= 0)
+                throw new ArgumentOutOfRangeException(
+                    nameof(distance),
+                    "Расстояние должно быть больше нуля.");
         }
 
         public override string ToString()
         {
-            return $"[{VehicleType}] {_brand} ({_plateNumber}, {_year} г.) " +
-                   $"расход {_fuelConsumption:F1} л/100км, " +
-                   $"топливо {_fuelPrice:F2} руб/л, вместимость {Capacity}";
+            return $"{brand} {model}, номер: {registrationNumber}, " +
+                   $"стоимость за км: {ratePerKm} руб.";
         }
     }
 }

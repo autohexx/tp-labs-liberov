@@ -1,41 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Library
+﻿namespace Library
 {
-    public class Car : Vehicle
+    public class PassengerCar : Vehicle
     {
-        private readonly int _passengerSeats;
-        private readonly double _comfortCoefficient;
+        private int passengerSeats;
 
-        public Car(string plateNumber, string brand, int year,
-                   double fuelConsumption, double fuelPrice,
-                   int passengerSeats, double comfortCoefficient)
-            : base(plateNumber, brand, year, fuelConsumption, fuelPrice)
+        public int PassengerSeats => passengerSeats;
+
+        public PassengerCar(
+            string brand,
+            string model,
+            string registrationNumber,
+            decimal ratePerKm,
+            int passengerSeats)
+            : base(brand, model, registrationNumber, ratePerKm)
         {
-            if (passengerSeats < 1 || passengerSeats > 8)
-                throw new ArgumentOutOfRangeException(nameof(passengerSeats), "Мест в легковом авто: 1..8.");
-            if (comfortCoefficient < 1.0 || comfortCoefficient > 3.0)
-                throw new ArgumentOutOfRangeException(nameof(comfortCoefficient), "Коэффициент комфорта: 1.0..3.0.");
+            if (passengerSeats <= 0)
+                throw new ArgumentOutOfRangeException(
+                    nameof(passengerSeats),
+                    "Количество мест должно быть больше нуля.");
 
-            _passengerSeats = passengerSeats;
-            _comfortCoefficient = comfortCoefficient;
+            this.passengerSeats = passengerSeats;
         }
 
-        public override int Capacity => _passengerSeats;
-        public override string VehicleType => "Легковой";
+        public override string CapacityDescription =>
+            $"{passengerSeats} пассажирских мест";
 
-        public override double CalculateTripCost(double distanceKm)
+        public override decimal CalculateTripCost(decimal distance)
         {
-            return FuelCost(distanceKm) * _comfortCoefficient;
+            ValidateDistance(distance);
+
+            return distance * RatePerKm;
         }
 
         public override string ToString()
         {
-            return base.ToString() + $", комфорт ×{_comfortCoefficient:F1}";
+            return $"Легковой автомобиль: {base.ToString()}, " +
+                   $"вместимость: {CapacityDescription}";
         }
     }
 }

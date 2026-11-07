@@ -1,48 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Library
+﻿namespace Library
 {
     public class Truck : Vehicle
     {
-        private readonly double _maxCargoKg;
-        private readonly double _cargoCoefficient;
-        private readonly bool _requiresSpecialPermit;
+        private decimal maxLoadTons;
 
-        public Truck(string plateNumber, string brand, int year,
-                     double fuelConsumption, double fuelPrice,
-                     double maxCargoKg, double cargoCoefficient, bool requiresSpecialPermit)
-            : base(plateNumber, brand, year, fuelConsumption, fuelPrice)
+        public decimal MaxLoadTons => maxLoadTons;
+
+        public Truck(
+            string brand,
+            string model,
+            string registrationNumber,
+            decimal ratePerKm,
+            decimal maxLoadTons)
+            : base(brand, model, registrationNumber, ratePerKm)
         {
-            if (maxCargoKg <= 0)
-                throw new ArgumentOutOfRangeException(nameof(maxCargoKg), "Грузоподъёмность должна быть > 0.");
-            if (cargoCoefficient < 0.0 || cargoCoefficient > 1.5)
-                throw new ArgumentOutOfRangeException(nameof(cargoCoefficient), "Коэффициент груза: 0.0..1.5.");
+            if (maxLoadTons <= 0)
+                throw new ArgumentOutOfRangeException(
+                    nameof(maxLoadTons),
+                    "Грузоподъёмность должна быть больше нуля.");
 
-            _maxCargoKg = maxCargoKg;
-            _cargoCoefficient = cargoCoefficient;
-            _requiresSpecialPermit = requiresSpecialPermit;
+            this.maxLoadTons = maxLoadTons;
         }
 
-        public override int Capacity => (int)(_maxCargoKg / 1000.0);
-        public override string VehicleType => "Грузовой";
+        public override string CapacityDescription =>
+            $"{maxLoadTons} тонн груза";
 
-        public override double CalculateTripCost(double distanceKm)
+        public override decimal CalculateTripCost(decimal distance)
         {
-            double cost = FuelCost(distanceKm) * (1.0 + _cargoCoefficient);
-            if (_requiresSpecialPermit)
-                cost *= 1.2;
-            return cost;
+            ValidateDistance(distance);
+
+            return distance * (RatePerKm + maxLoadTons * 5);
         }
 
         public override string ToString()
         {
-            return base.ToString() +
-                   $", груз до {_maxCargoKg:F0} кг, загрузка ×{_cargoCoefficient:F1}" +
-                   (_requiresSpecialPermit ? ", спецразрешение" : "");
+            return $"Грузовой автомобиль: {base.ToString()}, " +
+                   $"грузоподъёмность: {CapacityDescription}";
         }
     }
 }

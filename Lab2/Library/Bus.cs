@@ -1,42 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Library;
-
-namespace Library
+﻿namespace Library
 {
     public class Bus : Vehicle
     {
-        private readonly int _passengerCapacity;
-        private readonly decimal _ticketPrice;
+        private int passengerSeats;
 
-        public Bus(string plateNumber, string brand, int year,
-                   double fuelConsumption, double fuelPrice,
-                   int passengerCapacity, decimal ticketPrice)
-            : base(plateNumber, brand, year, fuelConsumption, fuelPrice)
+        public int PassengerSeats => passengerSeats;
+
+        public Bus(
+            string brand,
+            string model,
+            string registrationNumber,
+            decimal ratePerKm,
+            int passengerSeats)
+            : base(brand, model, registrationNumber, ratePerKm)
         {
-            if (passengerCapacity < 8 || passengerCapacity > 200)
-                throw new ArgumentOutOfRangeException(nameof(passengerCapacity), "Мест в автобусе: 8..200.");
-            if (ticketPrice < 0)
-                throw new ArgumentOutOfRangeException(nameof(ticketPrice), "Цена билета не может быть отрицательной.");
+            if (passengerSeats <= 0)
+                throw new ArgumentOutOfRangeException(
+                    nameof(passengerSeats),
+                    "Количество мест должно быть больше нуля.");
 
-            _passengerCapacity = passengerCapacity;
-            _ticketPrice = ticketPrice;
+            this.passengerSeats = passengerSeats;
         }
 
-        public override int Capacity => _passengerCapacity;
-        public override string VehicleType => "Автобус";
+        public override string CapacityDescription =>
+            $"{passengerSeats} пассажирских мест";
 
-        public override double CalculateTripCost(double distanceKm)
+        public override decimal CalculateTripCost(decimal distance)
         {
-            return FuelCost(distanceKm) + (double)_ticketPrice * _passengerCapacity * 0.1;
+            ValidateDistance(distance);
+
+            return distance * (RatePerKm + passengerSeats * 0.5m);
         }
 
         public override string ToString()
         {
-            return base.ToString() + $", билет {_ticketPrice:F2} руб.";
+            return $"Автобус: {base.ToString()}, " +
+                   $"вместимость: {CapacityDescription}";
         }
     }
 }
