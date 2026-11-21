@@ -10,7 +10,7 @@ namespace Program
 
             try
             {
-                Console.WriteLine("Введите текст:");
+                Console.WriteLine("Введите многострочный текст:");
                 Console.WriteLine("Для завершения ввода введите пустую строку:");
                 Console.WriteLine();
 
