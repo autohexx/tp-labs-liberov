@@ -1,9 +1,13 @@
-﻿namespace Server
+﻿namespace Server;
+
+internal class Program
 {
-    internal class Program
+     static async Task Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-        }
+        int port = 5555;
+
+        ChatServerApp server = new(port);
+
+        await server.StartAsync();
     }
+}
