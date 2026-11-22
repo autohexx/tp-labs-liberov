@@ -1,4 +1,4 @@
-﻿namespace lab6
+﻿namespace Server
 {
     internal class Program
     {
@@ -7,4 +7,3 @@
             Console.WriteLine("Hello, World!");
         }
     }
-}
